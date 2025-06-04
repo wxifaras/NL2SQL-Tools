@@ -1,7 +1,40 @@
-# NL2SQL-Tools
-Libraries to help with Natural Language to SQL Queries (NL2SQL).
+# SQL Server Schema Extractor
 
-## Libraries
-SQLServerSchemaExtractor
+A .NET tool for extracting SQL Server database schemas and serializing them to JSON or YAML. 
+Designed for reverse engineering, documentation, and seamless integration with natural language to SQL (NL2SQL) systems powered by large language models (LLMs).
 
-## Scripts
+## Features
+
+- Extracts schema from SQL Server databases.
+- Outputs schema in JSON or YAML format.
+- Configurable via `appsettings.json`.
+- Supports .NET 8 and .NET 9.
+
+## Usage
+
+1. **Configure Connection and Schema**
+
+   Edit `appsettings.json` (or `appsettings.Local.json`) to set your database connection and schema extraction options:
+   ```json
+      "DatabaseConnection": "your-connection-string-here",
+      "Nl2SqlConfig": {
+        "database": {
+        "description": "Your database description",
+        "schemas": [
+          {
+            "name": "SchemaName",
+            "tables": [
+              "Table1",
+              "Table2"
+            ]
+          }
+        ]
+      }
+    }
+
+2. **Run the Extractor**
+
+   Build and run the `SqlSchemaProviderHarnessTester` project:
+   dotnet run --project SqlSchemaProviderHarnessTester
+
+   The tool will connect to your database, extract the schema, and print the result as JSON.
