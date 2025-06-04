@@ -10,7 +10,6 @@ var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Local.json", optional: false, reloadOnChange: true)
             .Build();
 
-
 var config = configuration.GetSection("Nl2SqlConfig").Get<Nl2SqlConfigRoot>();
 var connectionString = configuration["DatabaseConnection"];
 
