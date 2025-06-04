@@ -8,7 +8,6 @@ Designed for reverse engineering, documentation, and seamless integration with n
 - Extracts schema from SQL Server databases.
 - Outputs schema in JSON or YAML format.
 - Configurable via `appsettings.json`.
-- Supports .NET 8 and .NET 9.
 
 ## Usage
 
