@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using SqlDbSchemaExtractor.Schema;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
-using SqlDbSchemaExtractor.Schema;
 
 internal sealed class SqlSchemaProvider
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SqlDbSchemaExtractor.Schema;
@@ -19,20 +20,28 @@ public sealed class SqlSchemaProviderHarness
         _databaseDescription = databaseDescription;
     }
 
-    public async Task<string> ReverseEngineerSchemaYAMLAsync(string[] tableNames)
+    public async Task<string> ReverseEngineerSchemaYAMLAsync(Nl2SqlConfigRoot config)
     {
-        string dbName = GetDatabaseName();
-        var yaml = await this.CaptureSchemaYAMLAsync(dbName, _connectionString, _databaseDescription, tableNames).ConfigureAwait(false);
+        var dbName = GetDatabaseName();
+        var qualifiedTableNames = config.Database.Schemas
+        .SelectMany(schema => schema.Tables.Select(table => $"{schema.Name}.{table}"))
+        .ToArray();
 
-        return yaml;    
-    }
-
-    public async Task<string> ReverseEngineerSchemaJSONAsync(string[] tableNames)
-    {
-        string dbName = GetDatabaseName();
-        var yaml = await this.CaptureSchemaJSONAsync(dbName, _connectionString, _databaseDescription, tableNames).ConfigureAwait(false);
+        var yaml = await this.CaptureSchemaYAMLAsync(dbName, _connectionString, _databaseDescription, qualifiedTableNames).ConfigureAwait(false);
 
         return yaml;
+    }
+
+    public async Task<string> ReverseEngineerSchemaJSONAsync(Nl2SqlConfigRoot config)
+    {
+        var dbName = GetDatabaseName();
+        var qualifiedTableNames = config.Database.Schemas
+        .SelectMany(schema => schema.Tables.Select(table => $"{schema.Name}.{table}"))
+        .ToArray();
+
+        var json = await this.CaptureSchemaJSONAsync(dbName, _connectionString, _databaseDescription, qualifiedTableNames).ConfigureAwait(false);
+
+        return json;
     }
 
     private async Task<string> CaptureSchemaYAMLAsync(string databaseKey, string? connectionString, string? description, params string[] tableNames)
@@ -47,12 +56,8 @@ public sealed class SqlSchemaProviderHarness
         await connection.CloseAsync().ConfigureAwait(false);
 
         var yamlText = await schema.FormatAsync(YamlSchemaFormatter.Instance).ConfigureAwait(false);
-        
-        return yamlText;
 
-        // If you want to save to a file    
-        //await this.SaveSchemaAsync("yaml", databaseKey, yamlText).ConfigureAwait(false);
-        //await this.SaveSchemaAsync("json", databaseKey, schema.ToJson()).ConfigureAwait(false);
+        return yamlText;
     }
 
     private async Task<string> CaptureSchemaJSONAsync(string databaseKey, string? connectionString, string? description, params string[] tableNames)
@@ -69,10 +74,6 @@ public sealed class SqlSchemaProviderHarness
         var yamlText = await schema.FormatAsync(YamlSchemaFormatter.Instance).ConfigureAwait(false);
 
         return schema.ToJson();
-
-        // If you want to save to a file
-        //await this.SaveSchemaAsync("yaml", databaseKey, yamlText).ConfigureAwait(false);
-        //await this.SaveSchemaAsync("json", databaseKey, schema.ToJson()).ConfigureAwait(false);
     }
 
     private string GetDatabaseName()

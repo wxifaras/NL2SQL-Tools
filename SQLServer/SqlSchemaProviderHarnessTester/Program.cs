@@ -1,5 +1,8 @@
-﻿using SqlDbSchemaExtractor.Schema;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client;
+using SqlDbSchemaExtractor;
+using SqlDbSchemaExtractor.Schema;
+using System.Text.Json;
 
 var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -7,12 +10,11 @@ var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Local.json", optional: false, reloadOnChange: true)
             .Build();
 
-var connectionString = configuration["DatabaseConnection"];
-var databaseDescription = configuration["DatabaseDescription"];
-var tables = configuration["Tables"];
 
-var sqlHarness = new SqlSchemaProviderHarness(connectionString, databaseDescription);
-var tableNames = tables.Split("|");
-var jsonSchema = await sqlHarness.ReverseEngineerSchemaJSONAsync(tableNames);
+var config = configuration.GetSection("Nl2SqlConfig").Get<Nl2SqlConfigRoot>();
+var connectionString = configuration["DatabaseConnection"];
+
+var sqlHarness = new SqlSchemaProviderHarness(connectionString, config.Database.Description);
+var jsonSchema = await sqlHarness.ReverseEngineerSchemaJSONAsync(config).ConfigureAwait(false);
 
 Console.WriteLine(jsonSchema);
