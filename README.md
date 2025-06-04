@@ -31,7 +31,7 @@ Designed for reverse engineering, documentation, and seamless integration with n
       }
     }
 
-2. **Run the Extractor**
+2. **Sample Usage**
 
    Build and run the `SqlSchemaProviderHarnessTester` project:
    dotnet run --project SqlSchemaProviderHarnessTester
