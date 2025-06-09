@@ -1,7 +1,6 @@
 # SQL Server Schema Extractor
 
-A .NET tool for extracting SQL Server database schemas and serializing them to JSON or YAML. 
-Designed for reverse engineering, documentation, and seamless integration with natural language to SQL (NL2SQL) systems powered by large language models (LLMs).
+A .NET library that extracts SQL Server database schemas and converts them to JSON. The JSON output is designed for use in prompts, allowing large language models (LLMs) to translate natural language queries into SQL statements.
 
 ## Features
 
@@ -31,9 +30,24 @@ Designed for reverse engineering, documentation, and seamless integration with n
       }
     }
 
-2. **Run the Extractor**
+2. **Usage**
+   ```
+   var config = configuration.GetSection("Nl2SqlConfig").Get<Nl2SqlConfigRoot>();
+   var connectionString = configuration["DatabaseConnection"];
 
-   Build and run the `SqlSchemaProviderHarnessTester` project:
-   dotnet run --project SqlSchemaProviderHarnessTester
+   var sqlHarness = new SqlSchemaProviderHarness(connectionString, config.Database.Description);
+   var jsonSchema = await sqlHarness.ReverseEngineerSchemaJSONAsync(config).ConfigureAwait(false);
 
-   The tool will connect to your database, extract the schema, and print the result as JSON.
+## Additional Notes
+Adding column descriptions is crucial for large language models (LLMs) to translate natural language queries into SQL statements accurately.
+
+To add column descriptions to your database metadata, use the <b>sp_addextendedproperty</b> stored procedure.
+
+### Example
+```
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description', 
+    @value = N'This column stores the user email address', 
+    @level0type = N'SCHEMA', @level0name = 'dbo',
+    @level1type = N'TABLE',  @level1name = 'Users',
+    @level2type = N'COLUMN', @level2name = 'Email';
