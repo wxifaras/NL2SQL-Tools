@@ -1,7 +1,6 @@
 # SQL Server Schema Extractor
 
-A .NET library for extracting SQL Server database schemas and serializing them to JSON or YAML. 
-The primary purpose of the JSON output is to inject the database schema directly into prompts for natural language to SQL (NL2SQL).
+A .NET library that extracts SQL Server database schemas and converts them to JSON. The JSON output is designed for use in prompts, allowing large language models (LLMs) to translate natural language queries into SQL statements.
 
 ## Features
 
