@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,12 +17,27 @@ public sealed class SqlSchemaProviderHarness
 
     public SqlSchemaProviderHarness(string connectionString, string databaseDescription)
     {
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new ArgumentException("Connection string cannot be null or empty.", nameof(connectionString));
+        }
+
+        if (string.IsNullOrEmpty(databaseDescription))
+        {
+            throw new ArgumentException("Database description cannot be null or empty.", nameof(databaseDescription));
+        }
+
         _connectionString = connectionString;
         _databaseDescription = databaseDescription;
     }
 
     public async Task<string> ReverseEngineerSchemaYAMLAsync(Nl2SqlConfigRoot config)
     {
+        if (config == null)
+        {
+            throw new ArgumentException("Config cannot be null.", nameof(config));
+        }
+
         var dbName = GetDatabaseName();
         var qualifiedTableNames = config.Database.Schemas
         .SelectMany(schema => schema.Tables.Select(table => $"{schema.Name}.{table}"))
@@ -34,6 +50,11 @@ public sealed class SqlSchemaProviderHarness
 
     public async Task<string> ReverseEngineerSchemaJSONAsync(Nl2SqlConfigRoot config)
     {
+        if (config == null)
+        {
+            throw new ArgumentException("Config cannot be null.", nameof(config));
+        }
+
         var dbName = GetDatabaseName();
         var qualifiedTableNames = config.Database.Schemas
         .SelectMany(schema => schema.Tables.Select(table => $"{schema.Name}.{table}"))
