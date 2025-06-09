@@ -31,6 +31,9 @@ A .NET library that extracts SQL Server database schemas and converts them to JS
     }
 
 2. **Usage**
+
+To support configuration, ASP.NET Core APIs have it built-in, but console apps require adding the Microsoft.Extensions.Configuration package and manually setting up sources like appsettings.json.
+
    ```
    var config = configuration.GetSection("Nl2SqlConfig").Get<Nl2SqlConfigRoot>();
    var connectionString = configuration["DatabaseConnection"];
