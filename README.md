@@ -41,9 +41,8 @@ A .NET library that extracts SQL Server database schemas and converts them to JS
 ## Additional Notes
 Adding column descriptions is crucial for large language models (LLMs) to translate natural language queries into SQL statements accurately.
 
-To add column descriptions to your database metadata, use the <b>sp_addextendedproperty</b> stored procedure.
+To add column descriptions to your database metadata, use the <b>sp_addextendedproperty</b> stored procedure. <b>Example:</b>
 
-### Example
 ```
 EXEC sp_addextendedproperty 
     @name = N'MS_Description', 
