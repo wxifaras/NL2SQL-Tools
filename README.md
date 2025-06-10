@@ -31,23 +31,26 @@ A .NET library that extracts SQL Server database schemas and converts them to JS
     }
 
 2. **Usage**
+
+To support configuration, ASP.NET Core APIs have it built-in, but console apps require adding the Microsoft.Extensions.Configuration package and manually setting up sources like appsettings.json.
+
    ```
    var config = configuration.GetSection("Nl2SqlConfig").Get<Nl2SqlConfigRoot>();
    var connectionString = configuration["DatabaseConnection"];
 
    var sqlHarness = new SqlSchemaProviderHarness(connectionString, config.Database.Description);
    var jsonSchema = await sqlHarness.ReverseEngineerSchemaJSONAsync(config).ConfigureAwait(false);
-
+   ```
 ## Additional Notes
 Adding column descriptions is crucial for large language models (LLMs) to translate natural language queries into SQL statements accurately.
 
-To add column descriptions to your database metadata, use the <b>sp_addextendedproperty</b> stored procedure.
+To add column descriptions to your database metadata, use the sp_addextendedproperty stored procedure. 
 
-### Example
-```
-EXEC sp_addextendedproperty 
-    @name = N'MS_Description', 
-    @value = N'This column stores the user email address', 
-    @level0type = N'SCHEMA', @level0name = 'dbo',
-    @level1type = N'TABLE',  @level1name = 'Users',
-    @level2type = N'COLUMN', @level2name = 'Email';
+Example:
+   ```
+   EXEC sp_addextendedproperty 
+       @name = N'MS_Description', 
+       @value = N'This column stores the user email address', 
+       @level0type = N'SCHEMA', @level0name = 'dbo',
+       @level1type = N'TABLE',  @level1name = 'Users',
+       @level2type = N'COLUMN', @level2name = 'Email';
