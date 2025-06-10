@@ -14,6 +14,8 @@
 		<Authors>William Xifaras</Authors>
 		<Description>A .NET library that extracts SQL Server database schemas and converts them to JSON. The JSON output is designed for use in prompts, allowing large language models (LLMs) to translate natural language queries into SQL statements.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/wxifaras/NL2SQL-Tools</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
