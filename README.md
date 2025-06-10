@@ -40,16 +40,17 @@ To support configuration, ASP.NET Core APIs have it built-in, but console apps r
 
    var sqlHarness = new SqlSchemaProviderHarness(connectionString, config.Database.Description);
    var jsonSchema = await sqlHarness.ReverseEngineerSchemaJSONAsync(config).ConfigureAwait(false);
-
+   ```
 ## Additional Notes
 Adding column descriptions is crucial for large language models (LLMs) to translate natural language queries into SQL statements accurately.
 
 To add column descriptions to your database metadata, use the sp_addextendedproperty stored procedure. 
+
 Example:
-```
-EXEC sp_addextendedproperty 
-    @name = N'MS_Description', 
-    @value = N'This column stores the user email address', 
-    @level0type = N'SCHEMA', @level0name = 'dbo',
-    @level1type = N'TABLE',  @level1name = 'Users',
-    @level2type = N'COLUMN', @level2name = 'Email';
+   ```
+   EXEC sp_addextendedproperty 
+       @name = N'MS_Description', 
+       @value = N'This column stores the user email address', 
+       @level0type = N'SCHEMA', @level0name = 'dbo',
+       @level1type = N'TABLE',  @level1name = 'Users',
+       @level2type = N'COLUMN', @level2name = 'Email';
